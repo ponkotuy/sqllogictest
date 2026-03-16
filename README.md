@@ -1,5 +1,14 @@
 # sqllogictest
 
+> **This is a fork of [dolthub/sqllogictest](https://github.com/dolthub/sqllogictest).**
+>
+> ### Changes from upstream
+> - Added `summarize` command (`go/logictest/summarize/`) — a CLI tool that aggregates verify output and reports ok/not ok/skipped counts and ratios
+> - Added `ParseResults(io.Reader)` to `resultparser.go` to support parsing from stdin in addition to files
+> - Added `docker-compose.yml` for running MySQL locally
+
+---
+
 This is an unofficial mirror of the sqllogictests provided by SQLite, available at https://www.sqlite.org/sqllogictest/doc/trunk/about.wiki. In addition to the tests themselves, this repository also provides a go parser and runner for executing the tests against a database of your choice. Simply provide a test harness, then point the runner at a file or directory containing the subset of the sqllogictests you want to run.
 
 Additionally, we found that the tests did not match the values returned by modern MySQL (8.x), principally the return schemas. They have been regenerated to conform to what MySQL returns.

@@ -54,10 +54,17 @@ func ParseResultFile(f string) ([]*ResultLogEntry, error) {
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
 
+	return ParseResults(file)
+}
+
+// ParseResults parses result log entries from the given reader and returns a slice of results, in the order
+// that they occurred.
+func ParseResults(r io.Reader) ([]*ResultLogEntry, error) {
 	var entries []*ResultLogEntry
 
-	scanner := parser.LineScanner{Scanner: bufio.NewScanner(file)}
+	scanner := parser.LineScanner{Scanner: bufio.NewScanner(r)}
 
 	for {
 		entry, err := parseLogEntry(&scanner)

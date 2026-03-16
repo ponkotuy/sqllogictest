@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:9.2
+    container_name: sqllogictest-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sqllogictest
+      MYSQL_USER: sqllogictest
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
