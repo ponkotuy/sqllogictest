@@ -1,0 +1,29 @@
+services:
+  dolt:
+    image: dolthub/dolt-sql-server:latest
+    container_name: sqllogictest-dolt
+    ports:
+      - "3306:3306"
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        dolt config --global --set metrics.disabled true
+        dolt config --global --set user.name "sqllogictest"
+        dolt config --global --set user.email "sqllogictest@localhost"
+        dolt sql-server \
+          --host 0.0.0.0 \
+          --port 3306 \
+          --data-dir /var/lib/dolt &
+        SERVER_PID=$$!
+        until dolt sql --host 127.0.0.1 --port 3306 --user root -q "SELECT 1" 2>/dev/null; do
+          sleep 1
+        done
+        dolt sql --host 127.0.0.1 --port 3306 --user root -q "CREATE DATABASE IF NOT EXISTS sqllogictest;"
+        dolt sql --host 127.0.0.1 --port 3306 --user root -q "CREATE USER IF NOT EXISTS 'sqllogictest'@'%' IDENTIFIED BY 'password';"
+        dolt sql --host 127.0.0.1 --port 3306 --user root -q "GRANT ALL ON sqllogictest.* TO 'sqllogictest'@'%';"
+        wait $$SERVER_PID
+    volumes:
+      - dolt-data:/var/lib/dolt
+
+volumes:
+  dolt-data:
